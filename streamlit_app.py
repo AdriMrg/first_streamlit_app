@@ -10,7 +10,7 @@ streamlit.write('The user entered ', fruit_choice_query)
 #SNOWFLAKE
 streamlit.header("The fruit list")
 def get_fruit_list():
-    with my_cnx.cursor() as my_cru:
+    with my_cnx.cursor() as my_cur:
         #my_cur.execute("Select * from fruit_load_list where fruit_name = '" + fruit_choice_query + "'")
         my_cur.execute("Select * from fruit_load_list")
         return my_cur.fetchall()
