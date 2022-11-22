@@ -1,6 +1,7 @@
 import streamlit 
 import pandas
 import snowflake.connector
+import requests
 
 fruit_choice_query = streamlit.text_input('What fruit would you like information about from SNOWFLAKE?','')
 streamlit.write('The user entered ', fruit_choice_query)
@@ -37,16 +38,24 @@ streamlit.dataframe(fruits_to_show)
 #New Section to display fruityvice api response
 streamlit.header("Fruityvice Fruit Advice!")
 
-# ajoute un champs de saisie 
-fruit_choice = streamlit.text_input('What fruit would you like information about?','Kiwi')
-streamlit.write('The user entered ', fruit_choice)
+try: 
+  # ajoute un champs de saisie 
+  fruit_choice = streamlit.text_input('What fruit would you like information about?')
+  if not fruit_choice:
+    streamlit.error("Please select a fruit")
+  else:
+    #Appel l'API fruityvice avec la saisie en parametre
+    fruityvice_response   = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
+    # Formate le json 
+    fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
+    # Affiche le Json dans un joli tableau
+    streamlit.dataframe(fruityvice_normalized)
+except URLError as e:
+    streamlit.error();
 
-#Appel l'API fruityvice avec la saisie en parametre
-import requests
-fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
 
 
-# Formate le json 
-fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
-# Affiche le Json dans un joli tableau
-streamlit.dataframe(fruityvice_normalized)
+
+
+
+
