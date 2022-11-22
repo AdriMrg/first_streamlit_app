@@ -3,9 +3,6 @@ import pandas
 import snowflake.connector
 import requests
 
-
-streamlit.write('The user entered ', fruit_choice_query)
-
 def insert_row_in_snowflake(new_fruit):
     with my_cnx.cursor() as my_cur:
         my_cur.execute("insert into fruit_load_list values ('from streamlit')")
