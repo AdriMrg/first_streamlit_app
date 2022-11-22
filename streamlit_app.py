@@ -8,12 +8,18 @@ streamlit.write('The user entered ', fruit_choice_query)
 
 
 #SNOWFLAKE
-my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
-my_cur = my_cnx.cursor()
-my_cur.execute("Select * from fruit_load_list where fruit_name = '" + fruit_choice_query + "'")
-my_data_rows = my_cur.fetchall()
 streamlit.header("The fruit list")
-streamlit.dataframe(my_data_rows)
+def get_fruit_list():
+    with my_cnx.cursor() as my_cru:
+        #my_cur.execute("Select * from fruit_load_list where fruit_name = '" + fruit_choice_query + "'")
+        my_cur.execute("Select * from fruit_load_list")
+        return my_cur.fetchall()
+
+if streamlit.button('Get fruit load list'):
+    my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
+    my_data_rows = get_fruit_list()
+    streamlit.dataframe(my_data_rows)
+
 
 streamlit.title('My parents new healthy diner')
 
